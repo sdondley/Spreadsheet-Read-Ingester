@@ -1,0 +1,9 @@
+/MANIFEST.SKIP
+/Spreadsheet-Read-Ingester-*
+/tmp
+!*/tmp
+*~
+*.swp
+*.swo
+*.tgz
+.build
