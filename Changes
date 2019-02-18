@@ -1,4 +1,8 @@
-Revision history for Spreadsheet-Read-Ingester
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+
+  - Fix test so it only attempts to delete files when cleaning up
 
 0.001     2019-02-18 13:26:23-05:00 America/New_York
 
