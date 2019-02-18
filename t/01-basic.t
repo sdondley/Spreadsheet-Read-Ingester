@@ -73,5 +73,5 @@ opendir (DIR, $configdir) or die 'Could not open directory.';
 closedir (DIR);
 foreach my $file (@files) {
   $file = File::Spec->catfile($configdir, $file);
-  unlink $file;
+  unlink $file if -f $file;
 }
