@@ -1,4 +1,8 @@
-Revision history for Spreadsheet-Read-Ingester
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+
+  - fix methods documentation
 
 0.002     2019-02-18 16:30:48-05:00 America/New_York
 

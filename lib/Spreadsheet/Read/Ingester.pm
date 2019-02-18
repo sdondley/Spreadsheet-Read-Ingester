@@ -103,6 +103,7 @@ Returns an object identical to the object returned by the L<Spreadsheet::Read>
 module along with its corresponding methods.
 
 =method cleanup($days)
+
 =method cleanup()
 
   Spreadsheet::Read::Ingester->cleanup(0);
