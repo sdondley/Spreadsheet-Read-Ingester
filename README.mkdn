@@ -17,7 +17,7 @@ Spreadsheet::Read::Ingester - ingest and save csv and spreadsheet data to a perl
 
 # DESCRIPTION
 
-This module is intended to be a drop-in replacement for <Spreadsheet::Read> and
+This module is intended to be a drop-in replacement for [Spreadsheet::Read](https://metacpan.org/pod/Spreadsheet::Read) and
 is a simple, unobtrusive wrapper for it.
 
 Parsing spreadsheet and csv data files is time consuming, especially with large
