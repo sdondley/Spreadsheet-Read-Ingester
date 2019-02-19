@@ -49,6 +49,7 @@ sub cleanup {
   closedir (DIR);
   foreach my $file (@files) {
     $file = File::Spec->catfile($configdir, $file);
+    next if !(-f $file);
     unlink $file if -M $file >= $age;
   }
 }
@@ -73,7 +74,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This module is intended to be a drop-in replacement for <Spreadsheet::Read> and
+This module is intended to be a drop-in replacement for L<Spreadsheet::Read> and
 is a simple, unobtrusive wrapper for it.
 
 Parsing spreadsheet and csv data files is time consuming, especially with large
