@@ -2,7 +2,7 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
-  - Fix cleanup bug
+  - Fix cleanup bug in test
 
 0.004     2019-02-19 07:32:00-05:00 America/New_York
 

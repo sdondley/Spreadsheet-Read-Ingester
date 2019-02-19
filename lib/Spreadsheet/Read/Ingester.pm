@@ -42,6 +42,10 @@ sub cleanup {
   my $s = shift;
   my $age = shift // 30;
 
+  if ($age eq '0') {
+    $age = -1;
+  }
+
   my $configdir = File::UserConfig->new(dist => 'Spreadsheet-Read-Ingester')->configdir;
 
   opendir (DIR, $configdir) or die 'Could not open directory.';
@@ -49,8 +53,10 @@ sub cleanup {
   closedir (DIR);
   foreach my $file (@files) {
     $file = File::Spec->catfile($configdir, $file);
-    next if !(-f $file);
-    unlink $file if -M $file >= $age;
+    next if (-d $file);
+    print STDERR -M $file;
+    print STDERR "\n";
+    unlink $file if -M "$file" >= $age;
   }
 }
 
