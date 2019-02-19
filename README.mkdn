@@ -49,7 +49,8 @@ Returns an object identical to the object returned by the [Spreadsheet::Read](ht
 module along with its corresponding methods.
 
 ## cleanup($days)
-=method cleanup()
+
+## cleanup()
 
     Spreadsheet::Read::Ingester->cleanup(0);
 
