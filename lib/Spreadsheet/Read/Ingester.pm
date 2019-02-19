@@ -7,7 +7,7 @@ use Storable;
 use File::Spec;
 use File::Signature;
 use File::UserConfig;
-use Spreadsheet::Read;
+use Spreadsheet::Read 0.68;
 
 ### Public methods ###
 
