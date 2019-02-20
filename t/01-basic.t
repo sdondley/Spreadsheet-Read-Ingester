@@ -1,6 +1,7 @@
 use Test::Most tests => 8;
 use File::Signature;
 use File::Spec;
+use File::Copy;
 use Storable;
 use Spreadsheet::Read::Ingester;
 
@@ -8,30 +9,47 @@ use Spreadsheet::Read::Ingester;
 
 
 
-
+#set_failure_handler ( \&test_cleanup );
 
 diag( "Running Spreadsheet::Read::Ingester tests" );
 my $configdir = File::UserConfig->new(dist => 'Spreadsheet-Read-Ingester')->configdir;
 
+my $tmp_dir = File::Spec->catfile($configdir, 'tmp');
+if (!-d $tmp_dir) {
+  mkdir $tmp_dir or die 'Could not create temporary directory';
+}
+
+opendir (DIR, $configdir) or die 'Could not open directory.';
+my @files = readdir (DIR) or die 'Could not read files from config directory';
+closedir (DIR);
+
+foreach my $file (@files) {
+  my $source = File::Spec->catfile($configdir, $file);
+  next if !-f $source;
+  copy $source, File::Spec->catfile($tmp_dir, $file)
+    or die 'Could not copy file to tmp directory';
+}
+
 my $sig = File::Signature->new('t/test_files/test.csv')->{digest};
+$sig .= '-clip1strip1';
 my $new_file = File::Spec->catfile($configdir, $sig);
 
-# make sure file doesn't exist from a previous failed test
+# make sure file doesn't exist from any previous failed test
 unlink $new_file if -f $new_file;
 
 my $data;
 lives_ok {
-  $data = Spreadsheet::Read::Ingester->new( 't/test_files/test.csv' );
+  $data = Spreadsheet::Read::Ingester->new( 't/test_files/test.csv', strip => 1, clip => 1 );
 } 'Can create new object';
 
-is (1, -f $new_file, 'created parsed file');
+is (-f $new_file, 1, 'created parsed file');
 
 my $dummy_data = { hash => 1 };
 
 store $dummy_data, $new_file;
 
 lives_ok {
-  $data = Spreadsheet::Read::Ingester->new('t/test_files/test.csv' );
+  $data = Spreadsheet::Read::Ingester->new('t/test_files/test.csv', strip => 1, clip => 1 );
 } 'attempts to get parsed data';
 
 is ($data->{hash}, 1, 'retrieves parsed data');
@@ -39,6 +57,7 @@ is ($data->{hash}, 1, 'retrieves parsed data');
 lives_ok {
   Spreadsheet::Read::Ingester->cleanup();
 } 'cleans up directory';
+sleep 1;
 
 warnings_like {
   Spreadsheet::Read::Ingester->cleanup('blah');
@@ -50,4 +69,13 @@ Spreadsheet::Read::Ingester->cleanup(0);
 
 is (-e $new_file, undef, 'parsed file is deleted');
 
-unlink $new_file if -f $new_file;
+# cleanup
+unlink $new_file;
+
+# restore files from tmp directory
+foreach my $file (@files) {
+  my $source = File::Spec->catfile($tmp_dir, $file);
+  next if !-f $source;
+  rename $source, File::Spec->catfile($configdir, $file) or die 'Could not rename file.';
+}
+rmdir $tmp_dir or die 'Could not remove tmp directory';
