@@ -2,10 +2,6 @@ use Test::Most tests => 8;
 use File::Signature;
 use File::Spec;
 use Storable;
-BEGIN {
-  use Test::File::ShareDir::Module { "Spreadsheet::Read::Ingester" => "share/" };
-  use Test::File::ShareDir::Dist { "Spreadsheet-Read-Ingester" => "share/" };
-}
 use Spreadsheet::Read::Ingester;
 
 
