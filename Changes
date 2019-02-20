@@ -1,4 +1,10 @@
-Revision history for Spreadsheet-Read-Ingester
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+
+  - Attempt to allow module to work with older versions of perl
+  - Streamline test logic
+  - Add argument checks to cleanup method
 
 0.006     2019-02-19 14:55:46-05:00 America/New_York
 
