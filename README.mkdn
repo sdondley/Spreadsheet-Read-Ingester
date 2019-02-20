@@ -31,8 +31,10 @@ and is a function of the user's OS.
 The stored data file names are the unique file signatures for the raw data file.
 The signature is used to detect if the original file changed, in which case the
 data is reingested from the raw file and a new parsed file is saved using an
-updated file signature. Parsed data files are kept indefinitely but can be
-deleted with the `cleanup()` method.
+updated file signature. Arguments passed to the constructor are appended to the
+name of the file to ensure different parse options are accounted for. Parsed
+data files are kept indefinitely but can be deleted with the `cleanup()`
+method.
 
 Consult the [Spreadsheet::Read](https://metacpan.org/pod/Spreadsheet::Read) documentation for accessing the data object
 returned by this module.

@@ -1,6 +1,6 @@
-Revision history for {{$dist->name}}
+Revision history for Spreadsheet-Read-Ingester
 
-{{$NEXT}}
+0.009     2019-02-20 11:51:53-05:00 America/New_York
 
   - Protect existing files from getting deleted when test is run
   - Ensure data returned from stored data files reflects the options passed to constructor
