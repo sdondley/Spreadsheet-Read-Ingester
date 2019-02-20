@@ -40,10 +40,15 @@ sub new {
 
 sub cleanup {
   my $s = shift;
-  my $age = shift // 30;
+  my $age = shift;
 
-  if ($age eq '0') {
-    $age = -1;
+  if (!defined $age) {
+    $age = 30;
+  } elsif ($age eq '0') {
+    $age = -1
+  } elsif ($age !~ /^\d+$/) {
+    warn 'cleanup method accepts only positive integer values or 0';
+    return;
   }
 
   my $configdir = File::UserConfig->new(dist => 'Spreadsheet-Read-Ingester')->configdir;
@@ -54,9 +59,9 @@ sub cleanup {
   foreach my $file (@files) {
     $file = File::Spec->catfile($configdir, $file);
     next if (-d $file);
-    print STDERR -M $file;
-    print STDERR "\n";
-    unlink $file if -M "$file" >= $age;
+    if (-M $file >= $age) {
+      unlink $file or die 'Cannot remove file: $file';
+    }
   }
 }
 
