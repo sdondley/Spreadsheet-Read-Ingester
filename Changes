@@ -1,4 +1,9 @@
-Revision history for Spreadsheet-Read-Ingester
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+
+  - Fix link in documentation
+  - Remove share directory from distribution
 
 0.007     2019-02-19 19:54:36-05:00 America/New_York
 
