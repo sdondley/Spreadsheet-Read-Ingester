@@ -23,7 +23,7 @@ is a simple, unobtrusive wrapper for it.
 Parsing spreadsheet and csv data files is time consuming, especially with large
 data sets. If a data file is ingested more than once, much time and processing
 power is wasted reparsing the same data. To avoid reparsing, this module uses
-<Storable> to save a parsed version of the data to disk when a new file is
+[Storable](https://metacpan.org/pod/Storable) to save a parsed version of the data to disk when a new file is
 ingested. All subsequent ingestions are retrieved from the stored Perl data
 structure. Files are saved in the directory determined by [File::UserConfig](https://metacpan.org/pod/File::UserConfig)
 and is a function of the user's OS.
