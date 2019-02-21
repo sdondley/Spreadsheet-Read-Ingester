@@ -1,8 +1,10 @@
-use Test::Most tests => 8;
+use Test::Most tests => 12;
 use File::Signature;
 use File::Spec;
 use File::Copy;
 use Storable;
+use Spreadsheet::Read;
+use Log::Log4perl::Shortcuts qw(:all);
 use Spreadsheet::Read::Ingester;
 
 
@@ -42,6 +44,21 @@ lives_ok {
   $data = Spreadsheet::Read::Ingester->new( 't/test_files/test.csv', strip => 1, clip => 1 );
 } 'Can create new object';
 
+like ($data->parses("CSV"), qr/CSV/, 'can get parser type');
+
+my @rows = $data->rows(1);
+is ($rows[1][1], 'four', 'returns rows');
+
+my $new_data = Spreadsheet::Read::Ingester->new('t/test_files/test2.csv');
+
+lives_ok {
+  $data->add('t/test_files/test2.csv');
+} 'Can add data to existing data';
+
+is (scalar keys %{$data->[0]{sheet}}, 2, 'has two sheets');
+
+
+
 is (-f $new_file, 1, 'created parsed file');
 
 my $dummy_data = { hash => 1 };
@@ -52,12 +69,13 @@ lives_ok {
   $data = Spreadsheet::Read::Ingester->new('t/test_files/test.csv', strip => 1, clip => 1 );
 } 'attempts to get parsed data';
 
+
 is ($data->{hash}, 1, 'retrieves parsed data');
+sleep 2;
 
 lives_ok {
   Spreadsheet::Read::Ingester->cleanup();
 } 'cleans up directory';
-sleep 1;
 
 warnings_like {
   Spreadsheet::Read::Ingester->cleanup('blah');
