@@ -215,7 +215,7 @@ an environment variable per the L<Spreadsheet::Read> documentation:
 
 Similarly, upgrading to a newer version of a parser can cause the same problem.
 Currently, the only workaround is to delete the stored data files parsed with
-the old older parser version.
+the older parser version.
 
 =head1 DEPENDENCIES
 
