@@ -115,8 +115,6 @@ sub _fetch_data {
   return $data;
 }
 
-
-
 sub cleanup {
   my $s = shift;
   my $age = shift;
@@ -204,6 +202,20 @@ Deletes all stored files from the user's application data directory. Takes an
 optional argument indicating the minimum number of days old the file must be
 before it is deleted. Defaults to 30 days. Passing a value of 0 deletes all
 files.
+
+=head1 LIMITATIONS
+
+If a new parser is installed (e.g. L<Text::CSV_XS>) and a previous ingestion
+used a different parser (e.g. L<Text::CSV_PP>), results from the previous parser
+will be returned. Most likely, this will have no practical consequence. But if
+you are concerned, you can avoid the problem by specifying the same parser using
+an environment variable per the L<Spreadsheet::Read> documentation:
+
+  env SPREADSHEET_READ_CSV=Text::CSV_PP ...
+
+Similarly, upgrading to a newer version of a parser can cause the same problem.
+Currently, the only workaround is to delete the stored data files parsed with
+the old older parser version.
 
 =head1 DEPENDENCIES
 
