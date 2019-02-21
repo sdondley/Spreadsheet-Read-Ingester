@@ -1,6 +1,6 @@
-Revision history for {{$dist->name}}
+Revision history for Spreadsheet-Read-Ingester
 
-{{$NEXT}}
+0.010     2019-02-21 13:06:56-05:00 America/New_York
 
   - Add LIMITATIONS section to documentation
   - Allow additional files to be added to existing object with "add" method
