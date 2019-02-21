@@ -1,4 +1,10 @@
-Revision history for Spreadsheet-Read-Ingester
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+
+  - Add LIMITATIONS section to documentation
+  - Allow additional files to be added to existing object with "add" method
+  - Implement previously non-working methods (parses, rows, cellrow, cell2cr, etc.) 
 
 0.009     2019-02-20 11:51:53-05:00 America/New_York
 
