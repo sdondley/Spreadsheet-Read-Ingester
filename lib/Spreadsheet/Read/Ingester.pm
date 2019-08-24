@@ -5,77 +5,17 @@ use warnings;
 
 use Storable;
 use File::Spec;
+use Log::Log4perl::Shortcuts qw(:all);
 use File::Signature;
 use File::UserConfig;
-use base qw (Spreadsheet::Read);
+use Spreadsheet::Read;
 
 ### Public methods ###
 
-# Override constructor
 sub new {
   my $s = shift;
   my $data = $s->_fetch_data(@_);
   return $data;
-}
-
-# wrap functions that require 'Spreadsheet::Read' objects
-my @funcs = qw (parses rows row col2label cr2cell cell2cr cellrow);
-
-foreach my $func (@funcs) {
-  { no strict;
-    *$func = sub {
-      my $s = shift;
-      bless $s, 'Spreadsheet::Read';
-      my $super_func = "SUPER::$func";
-      if (wantarray) {
-        my @result = $s->$super_func(shift);
-        bless $s, 'Spreadsheet::Read::Ingester';
-        return @result;
-      } else {
-        my $result = $s->$super_func(shift);
-        bless $s, 'Spreadsheet::Read::Ingester';
-        return $result;
-      }
-    }
-  }
-}
-
-# Override add function
-sub add {
-  my $book = shift;
-  my $data = $book->_fetch_data(@_);
-  $book && (ref $book eq "ARRAY" ||
-            ref $book eq __PACKAGE__) && $book->[0]{sheets} or return $data;
-
-  my $c1 = $book->[0];
-  my $c2 = $data->[0];
-
-  unless ($c1->{parsers}) {
-      $c1->{parsers}[0]{$_} = $c1->{$_} for qw( type parser version );
-      $book->[$_]{parser} = 0 for 1 .. $c1->{sheets};
-      }
-  my ($pidx) = (grep { my $p = $c1->{parsers}[$_];
-      $p->{type}    eq $c2->{type}   &&
-      $p->{parser}  eq $c2->{parser} &&
-      $p->{version} eq $c2->{version} } 0 .. $#{$c1->{parsers}});
-  unless (defined $pidx) {
-      $pidx = scalar @{$c1->{parsers}};
-      $c1->{parsers}[$pidx]{$_} = $c2->{$_} for qw( type parser version );
-      }
-
-  foreach my $sn (sort { $c2->{sheet}{$a} <=> $c2->{sheet}{$b} } keys %{$c2->{sheet}}) {
-      my $s = $sn;
-      my $v = 2;
-      while (exists $c1->{sheet}{$s}) {
-          $s = $sn."[".$v++."]";
-          }
-      $c1->{sheet}{$s} = $c1->{sheets} + $c2->{sheet}{$sn};
-      $data->[$c2->{sheet}{$sn}]{parser} = $pidx;
-      push @$book, $data->[$c2->{sheet}{$sn}];
-      }
-  $c1->{sheets} += $c2->{sheets};
-
-  return $book;
 }
 
 # Fetch data from stored variable, if available
@@ -106,7 +46,16 @@ sub _fetch_data {
 
   # otherwise reingest from raw file
   if (!$data) {
-    $data = $s->SUPER::new($file, @_);
+    open my $file2, '<', $file;
+    my $firstline = <$file2>;
+    close $file2;
+    my @commas = split /,/, $firstline;
+    my @bars = split /\|/, $firstline;
+    my $sep;
+    if (@commas || @bars) {
+      $sep = @commas > @bars ? ',' : '|';
+    }
+    $data = Spreadsheet::Read->new($file, @_, 'sep', $sep);
     my $error = $data->[0]{error};
     die "Unable to read data from file: $file. Error: $error" if $data->[0]{error};
     store $data, $parsed_file;
